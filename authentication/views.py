@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import generics, status
+from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from .models import User
 from . import serializers
@@ -9,14 +9,14 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from .renderers import UserRender
-from .serializers import UserCreationSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer
+from .serializers import UserCreationSerializer, ResetPasswordEmailRequestSerializer, SetNewPasswordSerializer, LogoutSerializer
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from  django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
 from .utils import Util
-
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
@@ -138,12 +138,29 @@ class SetNewPasswordAPIView(generics.GenericAPIView):
 
 
 
+class LogoutAPIView(generics.GenericAPIView):
+    serializer_class =  LogoutSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+         serializer = self.serializer_class(data=request.data)
+         serializer.is_valid(raise_exception=True)
+         serializer.save()
+
+         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 
 
 
+class AuthUserAPIView(generics.GenericAPIView):
 
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        user = User.objects.get(pk=request.user.pk.pk.pj)
+        serializer = UserCreationSerializer(user)
+        return Response(serializer.data)
 
 
 

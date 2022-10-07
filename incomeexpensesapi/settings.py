@@ -43,11 +43,14 @@ INSTALLED_APPS = [
     'expenses',
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'djoser',
     'income',
     'userstats',
+    'social_auth',
     'corsheaders',
+
 
 ]
 
@@ -55,6 +58,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
     'NON_FIELD_ERRORS_KEY': 'error',
+    'EXCEPTION_HANDLER': 'utils.exceptionhandler.custom_exception_handler',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
@@ -78,6 +82,10 @@ SWAGGER_SETTINGS = {
    }
 }
 
+
+
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -87,6 +95,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'incomeexpensesapi.urls'
@@ -102,6 +111,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+
             ],
         },
     },
